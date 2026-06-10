@@ -4,11 +4,15 @@ public class PlayerAttack : MonoBehaviour
 {
     [Header("Attack")]
     public Transform attackPoint;      // 공격 중심점
-    public float attackRange = 0.5f;   // 공격 범위
-    public int attackDamage = 10;      // 공격 데미지
 
     public LayerMask enemyLayer;       // 적 레이어
 
+    private PlayerWeapon playerWeapon;
+
+    void Start()
+    {
+        playerWeapon = GetComponent<PlayerWeapon>();
+    }
     void Update()
     {
         // 공격 입력
@@ -24,7 +28,7 @@ public class PlayerAttack : MonoBehaviour
         Collider2D[] enemies =
             Physics2D.OverlapCircleAll(
                 attackPoint.position,
-                attackRange,
+                playerWeapon.currentWeapon.attackRange,
                 enemyLayer
             );
 
@@ -39,7 +43,9 @@ public class PlayerAttack : MonoBehaviour
             if (enemyHealth != null)
             {
                 // 데미지 적용
-                enemyHealth.TakeDamage(attackDamage);
+                enemyHealth.TakeDamage(
+                    playerWeapon.currentWeapon.attackDamage
+                );
             }
         }
     }
@@ -67,7 +73,7 @@ public class PlayerAttack : MonoBehaviour
 
         Gizmos.DrawWireSphere(
             attackPoint.position,
-            attackRange
+            playerWeapon.currentWeapon.attackRange
         );
     }
 }
