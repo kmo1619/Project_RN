@@ -68,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
                 jumpForce
             );
         }
+
         //대시
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -76,4 +77,5 @@ public class PlayerMovement : MonoBehaviour
             transform.position += Vector3.right * direction * dashDistance;
         }
     }
+  
 }
