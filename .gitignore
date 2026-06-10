@@ -1,0 +1,33 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+UserSettings/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# Unity cache
+.DS_Store
+Thumbs.db
+
+# Generated crash reports
+sysinfo.txt
+
+# Addressables
+Assets/AddressableAssetsData/*/*.bin*
+
+# Auto-generated packages lock file (º±≈√)
