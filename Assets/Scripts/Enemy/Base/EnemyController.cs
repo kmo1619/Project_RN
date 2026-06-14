@@ -8,6 +8,10 @@ public abstract class EnemyController : MonoBehaviour
 
     public StateMachine StateMachine { get; protected set; }
 
+    public EnemyHitStunState HitStunState { get; protected set; }
+
+    protected IState stateBeforeHitStun;
+
     protected virtual void Awake()
     {
         GameObject playerObj =
@@ -19,11 +23,29 @@ public abstract class EnemyController : MonoBehaviour
         }
 
         StateMachine = new StateMachine();
+
+        EnsureVisualComponent();
+        HitStunState = new EnemyHitStunState(this);
     }
 
     protected virtual void Update()
     {
         StateMachine?.Update();
+    }
+
+    public void EnterHitStun()
+    {
+        if (StateMachine.CurrentState != HitStunState)
+        {
+            stateBeforeHitStun = StateMachine.CurrentState;
+        }
+
+        StateMachine.ChangeState(HitStunState);
+    }
+
+    public IState GetStateAfterHitStun()
+    {
+        return stateBeforeHitStun;
     }
 
     public float DistanceToPlayer()
@@ -39,5 +61,16 @@ public abstract class EnemyController : MonoBehaviour
     public Transform GetPlayer()
     {
         return player;
+    }
+
+    private void EnsureVisualComponent()
+    {
+        if (GetComponent<EnemyVisual>() != null)
+            return;
+
+        if (GetComponent<SpriteRenderer>() == null)
+            return;
+
+        gameObject.AddComponent<EnemyVisual>();
     }
 }

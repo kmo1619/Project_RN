@@ -1,0 +1,13 @@
+Project Rules
+
+- Unity 2D project
+- State Pattern FSM only
+- No enum state machine
+- No switch based state management
+- Use ScriptableObject for data
+- Use Rigidbody2D for movement
+- Use F key for parry
+- Use D key for attack
+- Use LeftShift for dash
+- Use component architecture
+- Follow existing folder structure

@@ -23,6 +23,17 @@ public class EnemyCombat : MonoBehaviour
         Debug.Log($"{name} Attack");
     }
 
+    public void ApplyStagger(int staggerPower)
+    {
+        if (CheckHitStun(staggerPower))
+        {
+            controller.EnterHitStun();
+            return;
+        }
+
+        AddKnockdownGauge(staggerPower);
+    }
+
     public bool CheckHitStun(int staggerPower)
     {
         return staggerPower >= controller.stats.poise;

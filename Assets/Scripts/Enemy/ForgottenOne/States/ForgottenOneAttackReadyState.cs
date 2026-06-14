@@ -24,7 +24,7 @@ public class ForgottenOneAttackReadyState : IState
         if (timer <= 0f)
         {
             enemy.GetComponent<EnemyCombat>()
-     .PerformAttack();
+                .PerformAttack();
 
             enemy.StateMachine.ChangeState(
                 enemy.AttackRecoveryState);

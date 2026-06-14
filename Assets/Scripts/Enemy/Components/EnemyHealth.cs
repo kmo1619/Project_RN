@@ -8,6 +8,13 @@ public class EnemyHealth :
 
     private int currentHealth;
 
+    private EnemyCombat combat;
+
+    private void Awake()
+    {
+        combat = GetComponent<EnemyCombat>();
+    }
+
     private void Start()
     {
         currentHealth = maxHealth;
@@ -25,6 +32,9 @@ public class EnemyHealth :
         if (currentHealth <= 0)
         {
             Destroy(gameObject);
+            return;
         }
+
+        combat?.ApplyStagger(staggerPower);
     }
 }
