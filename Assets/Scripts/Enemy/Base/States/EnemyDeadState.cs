@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class EnemyDeadState : IState
 {
     public EnemyDeadState(EnemyController enemy)

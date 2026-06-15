@@ -25,6 +25,8 @@ public class EnemyStats : ScriptableObject
 
     public float attackRecovery = 0.5f;
 
+    public int attackStaggerPower = 15;
+
     [Header("Poise")]
     public int poise = 10;
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerIdleState : IState
 {
-    private PlayerController player;
+    private readonly PlayerController player;
 
     public PlayerIdleState(PlayerController player)
     {
@@ -12,6 +12,7 @@ public class PlayerIdleState : IState
     public void Enter()
     {
         player.Movement.Stop();
+        player.SetPoise(player.stats.idlePoise);
     }
 
     public void Update()
@@ -23,6 +24,7 @@ public class PlayerIdleState : IState
 
             return;
         }
+
         float moveInput =
             Input.GetAxisRaw("Horizontal");
 

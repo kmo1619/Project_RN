@@ -17,6 +17,9 @@ public class EnemyHitStunState : IState
     {
         timer = enemy.stats.hitStunDuration;
         visual?.ShowHitStun();
+#if UNITY_EDITOR
+        Debug.Log("[HITSTUN][ENEMY]");
+#endif
     }
 
     public void Update()

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class EnemyController : MonoBehaviour
+public abstract class EnemyController : MonoBehaviour, IStateMachineProvider
 {
     public EnemyStats stats;
 

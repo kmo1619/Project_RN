@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: PlayerStats
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
   moveSpeed: 5
-  jumpForce: 20
+  jumpForce: 10
   dashSpeed: 12
   dashDuration: 0.15
   maxHealth: 100
+  idlePoise: 10
+  movePoise: 10
+  parryStartupPoise: 50
+  parryActivePoise: 50
+  dashPoise: 5
+  hitStunDuration: 0.3

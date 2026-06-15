@@ -1,8 +1,24 @@
+using UnityEngine;
+
 public class PlayerDashState : IState
 {
-    public PlayerDashState(PlayerController player) { }
+    private readonly PlayerController player;
 
-    public void Enter() { }
-    public void Update() { }
-    public void Exit() { }
+    public PlayerDashState(PlayerController player)
+    {
+        this.player = player;
+    }
+
+    public void Enter()
+    {
+        player.SetPoise(player.stats.dashPoise);
+    }
+
+    public void Update()
+    {
+    }
+
+    public void Exit()
+    {
+    }
 }

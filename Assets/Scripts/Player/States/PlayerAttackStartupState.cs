@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerAttackStartupState : IState
 {
-    private PlayerController player;
+    private readonly PlayerController player;
 
     private float timer;
 
@@ -14,8 +14,11 @@ public class PlayerAttackStartupState : IState
 
     public void Enter()
     {
-        timer =
-            player.Weapon.CurrentWeapon.attackStartup;
+        WeaponData weapon =
+            player.Weapon.CurrentWeapon;
+
+        timer = weapon.attackStartup;
+        player.SetPoise(weapon.attackPoise);
     }
 
     public void Update()

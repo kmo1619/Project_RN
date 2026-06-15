@@ -24,10 +24,13 @@ public class EnemyHealth :
         int damage,
         int staggerPower)
     {
+        int hpBefore = currentHealth;
         currentHealth -= damage;
 
+#if UNITY_EDITOR
         Debug.Log(
-            $"Enemy HP : {currentHealth}");
+            $"[DAMAGE][ENEMY] {hpBefore}->{currentHealth} ({currentHealth - hpBefore})");
+#endif
 
         if (currentHealth <= 0)
         {

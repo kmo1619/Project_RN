@@ -15,4 +15,18 @@ public class PlayerStats : ScriptableObject
 
     [Header("Health")]
     public int maxHealth = 100;
+
+    [Header("Poise")]
+    public int idlePoise = 10;
+
+    public int movePoise = 10;
+
+    public int parryStartupPoise = 50;
+
+    public int parryActivePoise = 50;
+
+    public int dashPoise = 5;
+
+    [Header("Hit Stun")]
+    public float hitStunDuration = 0.3f;
 }

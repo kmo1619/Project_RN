@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerMoveState : IState
 {
-    private PlayerController player;
+    private readonly PlayerController player;
 
     public PlayerMoveState(PlayerController player)
     {
@@ -11,6 +11,7 @@ public class PlayerMoveState : IState
 
     public void Enter()
     {
+        player.SetPoise(player.stats.movePoise);
     }
 
     public void Update()
@@ -22,6 +23,7 @@ public class PlayerMoveState : IState
 
             return;
         }
+
         float moveInput =
             Input.GetAxisRaw("Horizontal");
 
@@ -34,7 +36,6 @@ public class PlayerMoveState : IState
         }
 
         player.Movement.Move(moveInput);
-
         player.Movement.Flip(moveInput);
 
         if (Input.GetKeyDown(KeyCode.Space))

@@ -1,8 +1,28 @@
+using UnityEngine;
+
 public class PlayerDeadState : IState
 {
-    public PlayerDeadState(PlayerController player) { }
+    private readonly PlayerController player;
 
-    public void Enter() { }
-    public void Update() { }
-    public void Exit() { }
+    public PlayerDeadState(PlayerController player)
+    {
+        this.player = player;
+    }
+
+    public void Enter()
+    {
+        player.Movement.Stop();
+        player.SetPoise(999999);
+#if UNITY_EDITOR
+        Debug.Log("[DEAD]");
+#endif
+    }
+
+    public void Update()
+    {
+    }
+
+    public void Exit()
+    {
+    }
 }

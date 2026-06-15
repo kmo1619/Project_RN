@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IStateMachineProvider
 {
     public StateMachine StateMachine { get; private set; }
 
@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
 
     public PlayerWeapon Weapon { get; private set; }
 
+    public int currentPoise { get; private set; }
+
     public PlayerIdleState IdleState { get; private set; }
 
     public PlayerMoveState MoveState { get; private set; }
@@ -33,6 +35,8 @@ public class PlayerController : MonoBehaviour
     public PlayerParryActiveState ParryActiveState { get; private set; }
 
     public PlayerDashState DashState { get; private set; }
+
+    public PlayerHitStunState HitStunState { get; private set; }
 
     public PlayerDeadState DeadState { get; private set; }
 
@@ -58,6 +62,8 @@ public class PlayerController : MonoBehaviour
 
         DashState = new PlayerDashState(this);
 
+        HitStunState = new PlayerHitStunState(this);
+
         DeadState = new PlayerDeadState(this);
     }
 
@@ -69,5 +75,15 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         StateMachine.Update();
+    }
+
+    public void SetPoise(int value)
+    {
+        currentPoise = value;
+    }
+
+    public void EnterHitStun()
+    {
+        StateMachine.ChangeState(HitStunState);
     }
 }

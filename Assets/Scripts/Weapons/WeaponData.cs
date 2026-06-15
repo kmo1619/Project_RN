@@ -20,6 +20,9 @@ public class WeaponData : ScriptableObject
     [Header("Knockdown")]
     public int knockdownDamage;
 
+    [Header("Poise")]
+    public int attackPoise;
+
     [Header("Parry")]
     public float parryStartup;
     public float parryDuration;

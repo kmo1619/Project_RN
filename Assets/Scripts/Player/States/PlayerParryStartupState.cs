@@ -1,8 +1,24 @@
+using UnityEngine;
+
 public class PlayerParryStartupState : IState
 {
-    public PlayerParryStartupState(PlayerController player) { }
+    private readonly PlayerController player;
 
-    public void Enter() { }
-    public void Update() { }
-    public void Exit() { }
+    public PlayerParryStartupState(PlayerController player)
+    {
+        this.player = player;
+    }
+
+    public void Enter()
+    {
+        player.SetPoise(player.stats.parryStartupPoise);
+    }
+
+    public void Update()
+    {
+    }
+
+    public void Exit()
+    {
+    }
 }

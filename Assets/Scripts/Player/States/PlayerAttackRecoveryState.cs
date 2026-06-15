@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerAttackRecoveryState : IState
 {
-    private PlayerController player;
+    private readonly PlayerController player;
 
     private float timer;
 
@@ -14,8 +14,11 @@ public class PlayerAttackRecoveryState : IState
 
     public void Enter()
     {
-        timer =
-            player.Weapon.CurrentWeapon.attackRecovery;
+        WeaponData weapon =
+            player.Weapon.CurrentWeapon;
+
+        timer = weapon.attackRecovery;
+        player.SetPoise(weapon.attackPoise);
     }
 
     public void Update()
