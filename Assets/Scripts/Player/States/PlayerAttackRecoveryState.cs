@@ -19,6 +19,7 @@ public class PlayerAttackRecoveryState : IState
 
         timer = weapon.attackRecovery;
         player.SetPoise(weapon.attackPoise);
+        player.Movement.Stop();
     }
 
     public void Update()

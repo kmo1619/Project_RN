@@ -1,0 +1,59 @@
+[33mcommit 02632bb18ea96c4663651d5d163bf10d21082cfd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: kmo1619 <1619kmo@naver.com>
+Date:   Mon Jun 15 19:01:33 2026 +0900
+
+    state display implement
+
+[33mcommit d93ae946bf20ec9410515260a192cca349e0a1fd[m
+Author: kmo1619 <1619kmo@naver.com>
+Date:   Mon Jun 15 08:34:22 2026 +0900
+
+    cursor connect & debug test
+
+[33mcommit 77ccb54489b0624a6fbd92f92b1610354fd7cf10[m
+Author: kmo1619 <1619kmo@naver.com>
+Date:   Fri Jun 12 05:08:05 2026 +0900
+
+    refactor : Player and enemy system to FSM architecture
+
+[33mcommit 3ac10a13d7c3697b40298aa1a26c1f5e155e3c24[m
+Author: kmo1619 <1619kmo@naver.com>
+Date:   Fri Jun 12 04:18:16 2026 +0900
+
+    .
+
+[33mcommit 91417f34e7eb420421a0b8cd0332b898b776dd5e[m
+Author: kmo1619 <1619kmo@naver.com>
+Date:   Fri Jun 12 04:17:19 2026 +0900
+
+    structural changes
+
+[33mcommit 3dd2741a5891db07e0016a1afc7ffe2e46c178e3[m
+Author: kmo1619 <1619kmo@naver.com>
+Date:   Thu Jun 11 08:34:46 2026 +0900
+
+    weapon system
+
+[33mcommit 9b1b646e40369c49acd58f32aba60e23bb4705b7[m
+Author: kmo1619 <1619kmo@naver.com>
+Date:   Thu Jun 11 07:13:49 2026 +0900
+
+    enemy added
+
+[33mcommit 047ba6b0e9ff9f7c89b2a304def5b4b4620802d0[m
+Author: kmo1619 <1619kmo@naver.com>
+Date:   Thu Jun 11 05:58:01 2026 +0900
+
+    camera movement
+
+[33mcommit 4ccc629df0c930bf9b6f47af7b90d72554599497[m
+Author: kmo1619 <1619kmo@naver.com>
+Date:   Thu Jun 11 05:20:51 2026 +0900
+
+    Implement player movement
+
+[33mcommit 3f2946badbef79e637eef51de4ff5063b11e3773[m
+Author: kmo1619 <1619kmo@naver.com>
+Date:   Thu Jun 11 04:55:55 2026 +0900
+
+    initial Unity project
