@@ -36,15 +36,26 @@ public class PlayerMovement : MonoBehaviour
 
     public Vector2 WallNormal { get; private set; }
 
+    public float FacingDirection => Mathf.Sign(transform.localScale.x);
+
+    public Vector2 DashStartPosition { get; private set; }
+
     private float desiredMoveInput;
 
     private bool jumpRequested;
+
+    private bool isDashing;
+
+    private Vector2 dashDir;
+
+    private float originalGravityScale;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<BoxCollider2D>();
         controller = GetComponent<PlayerController>();
+        originalGravityScale = rb.gravityScale;
     }
 
     private void Update()
@@ -126,6 +137,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void ApplyMovement()
     {
+        if (isDashing)
+        {
+            rb.linearVelocity = new Vector2(
+                dashDir.x * controller.stats.dashSpeed,
+                0f);
+            return;
+        }
+
         float moveX = desiredMoveInput * controller.stats.moveSpeed;
 
         if (desiredMoveInput > 0f && IsWallRight)
@@ -143,6 +162,21 @@ public class PlayerMovement : MonoBehaviour
 
             jumpRequested = false;
         }
+    }
+
+    public void StartDash(Vector2 direction)
+    {
+        isDashing       = true;
+        dashDir         = direction;
+        DashStartPosition = rb.position;
+        rb.gravityScale = 0f;
+    }
+
+    public void StopDash()
+    {
+        isDashing       = false;
+        rb.gravityScale = originalGravityScale;
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
     }
 
     public void Move(float input)

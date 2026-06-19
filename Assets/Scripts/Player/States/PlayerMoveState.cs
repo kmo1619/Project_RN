@@ -24,8 +24,20 @@ public class PlayerMoveState : IState
             return;
         }
 
-        float moveInput =
-            Input.GetAxisRaw("Horizontal");
+        if (Input.GetKeyDown(KeyCode.LeftShift) &&
+            player.Dash.CanDash &&
+            player.Movement.IsGrounded)
+        {
+            float h   = Input.GetAxisRaw("Horizontal");
+            float dir = h != 0f ? Mathf.Sign(h) : player.Movement.FacingDirection;
+
+            player.Dash.Prepare(dir);
+            player.Dash.UseDash(player.stats.dashCooldown);
+            player.StateMachine.ChangeState(player.DashState);
+            return;
+        }
+
+        float moveInput = Input.GetAxisRaw("Horizontal");
 
         if (moveInput == 0)
         {

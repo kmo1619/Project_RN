@@ -11,7 +11,9 @@ public class PlayerStats : ScriptableObject
     [Header("Dash")]
     public float dashSpeed = 12f;
 
-    public float dashDuration = 0.15f;
+    public float dashDistance = 5f;
+
+    public float dashCooldown = 0.4f;
 
     [Header("Health")]
     public int maxHealth = 100;

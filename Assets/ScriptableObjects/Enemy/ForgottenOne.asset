@@ -19,8 +19,9 @@ MonoBehaviour:
   chaseRange: 10
   attackDamage: 10
   attackRange: 1.5
-  attackStartup: 0.5
-  attackRecovery: 0.5
+  attackStartup: 1.5
+  attackRecovery: 1
+  attackStaggerPower: 15
   poise: 10
   maxKnockdownGauge: 100
   hitStunDuration: 0.3

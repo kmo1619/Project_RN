@@ -11,11 +11,13 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public int CurrentHealth { get; private set; }
 
-    public bool isInvincible => invincibleTimer > 0f;
+    public bool isInvincible => invincibleTimer > 0f || forcedInvincible;
 
     public event Action<int, int> OnHealthChanged;
 
     private float invincibleTimer;
+
+    private bool forcedInvincible;
 
     private bool isDead;
 
@@ -38,6 +40,11 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         {
             invincibleTimer -= Time.deltaTime;
         }
+    }
+
+    public void SetInvincible(bool value)
+    {
+        forcedInvincible = value;
     }
 
     public void TakeDamage(int damage, int staggerPower)

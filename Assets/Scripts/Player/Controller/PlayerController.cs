@@ -36,6 +36,10 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
 
     public PlayerDashState DashState { get; private set; }
 
+    public PlayerDashAttackStartupState DashAttackStartupState { get; private set; }
+
+    public PlayerDashAttackRecoveryState DashAttackRecoveryState { get; private set; }
+
     public PlayerHitStunState HitStunState { get; private set; }
 
     public PlayerDeadState DeadState { get; private set; }
@@ -43,24 +47,27 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
     private void Awake()
     {
         Movement = GetComponent<PlayerMovement>();
-        Combat = GetComponent<PlayerCombat>();
-        Parry = GetComponent<PlayerParry>();
-        Dash = GetComponent<PlayerDash>();
-        Health = GetComponent<PlayerHealth>();
-        Weapon = GetComponent<PlayerWeapon>();
+        Combat   = GetComponent<PlayerCombat>();
+        Parry    = GetComponent<PlayerParry>();
+        Dash     = GetComponent<PlayerDash>();
+        Health   = GetComponent<PlayerHealth>();
+        Weapon   = GetComponent<PlayerWeapon>();
 
         StateMachine = new StateMachine();
 
         IdleState = new PlayerIdleState(this);
         MoveState = new PlayerMoveState(this);
 
-        AttackStartupState = new PlayerAttackStartupState(this);
+        AttackStartupState  = new PlayerAttackStartupState(this);
         AttackRecoveryState = new PlayerAttackRecoveryState(this);
 
         ParryStartupState = new PlayerParryStartupState(this);
-        ParryActiveState = new PlayerParryActiveState(this);
+        ParryActiveState  = new PlayerParryActiveState(this);
 
         DashState = new PlayerDashState(this);
+
+        DashAttackStartupState  = new PlayerDashAttackStartupState(this);
+        DashAttackRecoveryState = new PlayerDashAttackRecoveryState(this);
 
         HitStunState = new PlayerHitStunState(this);
 
