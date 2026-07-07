@@ -30,9 +30,11 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
 
     public PlayerAttackRecoveryState AttackRecoveryState { get; private set; }
 
-    public PlayerParryStartupState ParryStartupState { get; private set; }
+    public PlayerParryStartupState  ParryStartupState  { get; private set; }
 
-    public PlayerParryActiveState ParryActiveState { get; private set; }
+    public PlayerParryActiveState   ParryActiveState   { get; private set; }
+
+    public PlayerParryRecoveryState ParryRecoveryState { get; private set; }
 
     public PlayerDashState DashState { get; private set; }
 
@@ -61,8 +63,9 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
         AttackStartupState  = new PlayerAttackStartupState(this);
         AttackRecoveryState = new PlayerAttackRecoveryState(this);
 
-        ParryStartupState = new PlayerParryStartupState(this);
-        ParryActiveState  = new PlayerParryActiveState(this);
+        ParryStartupState  = new PlayerParryStartupState(this);
+        ParryActiveState   = new PlayerParryActiveState(this);
+        ParryRecoveryState = new PlayerParryRecoveryState(this);
 
         DashState = new PlayerDashState(this);
 

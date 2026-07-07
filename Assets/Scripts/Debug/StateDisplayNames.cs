@@ -13,6 +13,7 @@ public static class StateDisplayNames
             { typeof(PlayerAttackRecoveryState),    "ATTACK RECOVERY"   },
             { typeof(PlayerParryStartupState),      "PARRY STARTUP"     },
             { typeof(PlayerParryActiveState),       "PARRY ACTIVE"      },
+            { typeof(PlayerParryRecoveryState),     "PARRY RECOVERY"    },
             { typeof(PlayerDashState),              "DASH"              },
             { typeof(PlayerHitStunState),           "HIT STUN"          },
             { typeof(PlayerDeadState),              "DEAD"              },

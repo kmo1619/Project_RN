@@ -26,8 +26,11 @@ public class ForgottenOneAttackReadyState : IState
             enemy.GetComponent<EnemyCombat>()
                 .PerformAttack();
 
-            enemy.StateMachine.ChangeState(
-                enemy.AttackRecoveryState);
+            if (enemy.StateMachine.CurrentState == this)
+            {
+                enemy.StateMachine.ChangeState(
+                    enemy.AttackRecoveryState);
+            }
         }
     }
 

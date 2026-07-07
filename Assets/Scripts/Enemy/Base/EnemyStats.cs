@@ -33,6 +33,10 @@ public class EnemyStats : ScriptableObject
     [Header("Knockdown")]
     public int maxKnockdownGauge = 100;
 
+    public float knockdownDuration = 2f;
+
+    public int parryKnockdownPower = 30;
+
     [Header("HitStun")]
     public float hitStunDuration = 0.3f;
 }

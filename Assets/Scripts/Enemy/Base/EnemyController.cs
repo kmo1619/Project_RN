@@ -10,7 +10,11 @@ public abstract class EnemyController : MonoBehaviour, IStateMachineProvider
 
     public EnemyHitStunState HitStunState { get; protected set; }
 
+    public EnemyKnockdownState KnockdownState { get; protected set; }
+
     protected IState stateBeforeHitStun;
+
+    protected IState knockdownRecoveryState;
 
     protected virtual void Awake()
     {
@@ -25,7 +29,8 @@ public abstract class EnemyController : MonoBehaviour, IStateMachineProvider
         StateMachine = new StateMachine();
 
         EnsureVisualComponent();
-        HitStunState = new EnemyHitStunState(this);
+        HitStunState   = new EnemyHitStunState(this);
+        KnockdownState = new EnemyKnockdownState(this);
     }
 
     protected virtual void Update()
@@ -43,9 +48,19 @@ public abstract class EnemyController : MonoBehaviour, IStateMachineProvider
         StateMachine.ChangeState(HitStunState);
     }
 
+    public void EnterKnockdown()
+    {
+        StateMachine.ChangeState(KnockdownState);
+    }
+
     public IState GetStateAfterHitStun()
     {
         return stateBeforeHitStun;
+    }
+
+    public IState GetStateAfterKnockdown()
+    {
+        return knockdownRecoveryState;
     }
 
     public float DistanceToPlayer()

@@ -16,6 +16,12 @@ public class PlayerMoveState : IState
 
     public void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            player.StateMachine.ChangeState(player.ParryStartupState);
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.D))
         {
             player.StateMachine.ChangeState(

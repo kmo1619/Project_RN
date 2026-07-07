@@ -12,9 +12,11 @@ public class ForgottenOneController : EnemyController
     {
         base.Awake();
 
-        ChaseState = new ForgottenOneChaseState(this);
-        AttackReadyState = new ForgottenOneAttackReadyState(this);
+        ChaseState          = new ForgottenOneChaseState(this);
+        AttackReadyState    = new ForgottenOneAttackReadyState(this);
         AttackRecoveryState = new ForgottenOneAttackRecoveryState(this);
+
+        knockdownRecoveryState = ChaseState;
     }
 
     private void Start()

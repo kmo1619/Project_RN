@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyCombat : MonoBehaviour
+public class EnemyCombat : MonoBehaviour, IParryable
 {
     private EnemyController controller;
 
@@ -23,6 +23,11 @@ public class EnemyCombat : MonoBehaviour
         currentPoise = controller.stats.poise;
     }
 
+    public void OnParried()
+    {
+        AddKnockdownGauge(controller.stats.parryKnockdownPower);
+    }
+
     public void PerformAttack()
     {
         Vector2 origin = attackPoint != null
@@ -36,6 +41,17 @@ public class EnemyCombat : MonoBehaviour
 
         if (hit != null)
         {
+            IParryReceiver parryReceiver =
+                hit.GetComponent<IParryReceiver>();
+
+            if (parryReceiver != null &&
+                parryReceiver.TryParry(controller.stats.attackStaggerPower))
+            {
+                OnParried();
+                Debug.Log($"{name} Attack — Parried");
+                return;
+            }
+
             IDamageable damageable =
                 hit.GetComponent<IDamageable>();
 
@@ -97,6 +113,7 @@ public class EnemyCombat : MonoBehaviour
 #endif
 
         currentKnockdownGauge = 0;
+        controller.EnterKnockdown();
     }
 
     public void ResetPoise()

@@ -6,6 +6,9 @@ public class EnemyVisual : MonoBehaviour
     [Header("Hit Feedback")]
     public Color hitStunColor = Color.red;
 
+    [Header("Knockdown Feedback")]
+    public Color knockdownColor = Color.yellow;
+
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
 
@@ -21,6 +24,16 @@ public class EnemyVisual : MonoBehaviour
     }
 
     public void ClearHitStun()
+    {
+        spriteRenderer.color = originalColor;
+    }
+
+    public void ShowKnockdown()
+    {
+        spriteRenderer.color = knockdownColor;
+    }
+
+    public void ClearKnockdown()
     {
         spriteRenderer.color = originalColor;
     }

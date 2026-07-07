@@ -18,9 +18,13 @@ MonoBehaviour:
   dashDistance: 3
   dashCooldown: 0.4
   maxHealth: 100
+  parryStartupDuration: 0.1
+  parryActiveDuration: 1
+  parryRecoveryDuration: 0.1
   idlePoise: 10
   movePoise: 10
   parryStartupPoise: 50
   parryActivePoise: 50
+  parryRecoveryPoise: 10
   dashPoise: 5
   hitStunDuration: 0.3
