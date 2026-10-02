@@ -8,6 +8,10 @@ public abstract class EnemyController : MonoBehaviour, IStateMachineProvider
 
     public StateMachine StateMachine { get; protected set; }
 
+    public bool IsKnockedDown =>
+        StateMachine != null &&
+        StateMachine.CurrentState == KnockdownState;
+
     public EnemyHitStunState HitStunState { get; protected set; }
 
     public EnemyKnockdownState KnockdownState { get; protected set; }
@@ -40,10 +44,12 @@ public abstract class EnemyController : MonoBehaviour, IStateMachineProvider
 
     public void EnterHitStun()
     {
-        if (StateMachine.CurrentState != HitStunState)
-        {
-            stateBeforeHitStun = StateMachine.CurrentState;
-        }
+        if (StateMachine.CurrentState == HitStunState)
+            return;
+
+        stateBeforeHitStun = IsKnockedDown
+            ? GetStateAfterKnockdown()
+            : StateMachine.CurrentState;
 
         StateMachine.ChangeState(HitStunState);
     }

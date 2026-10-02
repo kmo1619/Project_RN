@@ -4,6 +4,9 @@ public class EnemyCombat : MonoBehaviour, IParryable
 {
     private EnemyController controller;
 
+    public bool IsKnockedDown =>
+        controller != null && controller.IsKnockedDown;
+
     private int currentPoise;
 
     private int currentKnockdownGauge;
@@ -65,6 +68,12 @@ public class EnemyCombat : MonoBehaviour, IParryable
 
     public void ApplyStagger(int staggerPower)
     {
+        if (controller.IsKnockedDown)
+        {
+            controller.EnterHitStun();
+            return;
+        }
+
         bool hitStun = CheckHitStun(staggerPower);
 
 #if UNITY_EDITOR

@@ -4,6 +4,8 @@ public class EnemyHealth :
     MonoBehaviour,
     IDamageable
 {
+    private const int KnockdownDamageMultiplier = 10;
+
     public int maxHealth = 100;
 
     private int currentHealth;
@@ -24,8 +26,12 @@ public class EnemyHealth :
         int damage,
         int staggerPower)
     {
+        int appliedDamage = combat != null && combat.IsKnockedDown
+            ? damage * KnockdownDamageMultiplier
+            : damage;
+
         int hpBefore = currentHealth;
-        currentHealth -= damage;
+        currentHealth -= appliedDamage;
 
 #if UNITY_EDITOR
         Debug.Log(
