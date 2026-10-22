@@ -25,6 +25,7 @@ public class PlayerIdleState : IState
 
         if (Input.GetKeyDown(KeyCode.D))
         {
+            player.BeginAttackCombo();
             player.StateMachine.ChangeState(
                 player.AttackStartupState);
 

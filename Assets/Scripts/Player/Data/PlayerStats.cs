@@ -8,6 +8,9 @@ public class PlayerStats : ScriptableObject
 
     public float jumpForce = 10f;
 
+    [Header("Attack Movement")]
+    public float attackStartupDeceleration = 30f;
+
     [Header("Dash")]
     public float dashSpeed = 12f;
 

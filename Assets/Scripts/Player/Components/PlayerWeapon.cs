@@ -11,6 +11,8 @@ public class PlayerWeapon : MonoBehaviour
 
     public WeaponData CurrentWeapon { get; private set; }
 
+    public WeaponType CurrentWeaponType { get; private set; } = WeaponType.StraightSword;
+
     private void Start()
     {
         EquipWeapon(WeaponType.StraightSword);
@@ -36,6 +38,8 @@ public class PlayerWeapon : MonoBehaviour
 
     public void EquipWeapon(WeaponType type)
     {
+        CurrentWeaponType = type;
+
         switch (type)
         {
             case WeaponType.StraightSword:

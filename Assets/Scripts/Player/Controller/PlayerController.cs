@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
 
     public PlayerWeapon Weapon { get; private set; }
 
+    private PlayerVisual visual;
+    private PlayerWeaponFollower weaponFollower;
+
     public int currentPoise { get; private set; }
 
     public PlayerIdleState IdleState { get; private set; }
@@ -29,6 +32,12 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
     public PlayerAttackStartupState AttackStartupState { get; private set; }
 
     public PlayerAttackRecoveryState AttackRecoveryState { get; private set; }
+
+    public PlayerAttackActiveState AttackActiveState { get; private set; }
+
+    public int AttackComboIndex { get; private set; }
+
+    private bool queuedComboAttack;
 
     public PlayerParryStartupState  ParryStartupState  { get; private set; }
 
@@ -54,6 +63,13 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
         Dash     = GetComponent<PlayerDash>();
         Health   = GetComponent<PlayerHealth>();
         Weapon   = GetComponent<PlayerWeapon>();
+        visual   = GetComponent<PlayerVisual>();
+        if (visual == null)
+            visual = gameObject.AddComponent<PlayerVisual>();
+
+        weaponFollower = GetComponent<PlayerWeaponFollower>();
+        if (weaponFollower == null)
+            weaponFollower = gameObject.AddComponent<PlayerWeaponFollower>();
 
         StateMachine = new StateMachine();
 
@@ -61,6 +77,7 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
         MoveState = new PlayerMoveState(this);
 
         AttackStartupState  = new PlayerAttackStartupState(this);
+        AttackActiveState  = new PlayerAttackActiveState(this);
         AttackRecoveryState = new PlayerAttackRecoveryState(this);
 
         ParryStartupState  = new PlayerParryStartupState(this);
@@ -85,6 +102,10 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
     private void Update()
     {
         StateMachine.Update();
+        visual.SetWeapon(Weapon.CurrentWeaponType);
+        weaponFollower.SetWeapon(Weapon.CurrentWeaponType);
+        visual.SetState(StateMachine.CurrentState);
+        visual.Tick();
     }
 
     public void SetPoise(int value)
@@ -95,5 +116,50 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
     public void EnterHitStun()
     {
         StateMachine.ChangeState(HitStunState);
+    }
+
+    public void BeginAttackCombo()
+    {
+        AttackComboIndex = 0;
+        queuedComboAttack = false;
+    }
+
+    public void QueueNextComboAttack()
+    {
+        if (AttackComboIndex < GetComboHitCount() - 1)
+            queuedComboAttack = true;
+    }
+
+    public bool AdvanceQueuedComboAttack()
+    {
+        if (!queuedComboAttack || AttackComboIndex >= GetComboHitCount() - 1)
+            return false;
+
+        queuedComboAttack = false;
+        AttackComboIndex++;
+        return true;
+    }
+
+    public void ResetAttackCombo()
+    {
+        AttackComboIndex = 0;
+        queuedComboAttack = false;
+    }
+
+    public void SetAttackVisual(string phase, float normalizedTime)
+    {
+        if (visual != null)
+            visual.SetAttackFrame(Weapon.CurrentWeaponType, AttackComboIndex, phase, normalizedTime);
+    }
+
+    private int GetComboHitCount()
+    {
+        return Weapon.CurrentWeaponType switch
+        {
+            WeaponType.Dagger => 3,
+            WeaponType.StraightSword => 4,
+            WeaponType.GreatSword => 2,
+            _ => 1
+        };
     }
 }

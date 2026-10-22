@@ -46,6 +46,10 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isDashing;
 
+    private bool isBraking;
+
+    private float brakingDeceleration;
+
     private Vector2 dashDir;
 
     private float originalGravityScale;
@@ -145,6 +149,23 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        if (isBraking)
+        {
+            float velocityX = Mathf.MoveTowards(
+                rb.linearVelocity.x,
+                0f,
+                brakingDeceleration * Time.fixedDeltaTime);
+
+            rb.linearVelocity = new Vector2(
+                velocityX,
+                rb.linearVelocity.y);
+
+            if (velocityX == 0f)
+                isBraking = false;
+
+            return;
+        }
+
         float moveX = desiredMoveInput * controller.stats.moveSpeed;
 
         if (desiredMoveInput > 0f && IsWallRight)
@@ -166,6 +187,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void StartDash(Vector2 direction)
     {
+        isBraking      = false;
         isDashing       = true;
         dashDir         = direction;
         DashStartPosition = rb.position;
@@ -181,7 +203,17 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(float input)
     {
+        if (input != 0f)
+            isBraking = false;
+
         desiredMoveInput = input;
+    }
+
+    public void Decelerate(float deceleration)
+    {
+        desiredMoveInput = 0f;
+        brakingDeceleration = Mathf.Max(0f, deceleration);
+        isBraking = brakingDeceleration > 0f && rb.linearVelocity.x != 0f;
     }
 
     public void Stop()
