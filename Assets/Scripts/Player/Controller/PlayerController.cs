@@ -105,6 +105,12 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
         visual.SetWeapon(Weapon.CurrentWeaponType);
         weaponFollower.SetWeapon(Weapon.CurrentWeaponType);
         visual.SetState(StateMachine.CurrentState);
+        if (StateMachine.CurrentState is not PlayerAttackStartupState &&
+            StateMachine.CurrentState is not PlayerAttackActiveState &&
+            StateMachine.CurrentState is not PlayerAttackRecoveryState)
+        {
+            weaponFollower.ClearGreatSwordAttack();
+        }
         visual.Tick();
     }
 
@@ -150,6 +156,9 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
     {
         if (visual != null)
             visual.SetAttackFrame(Weapon.CurrentWeaponType, AttackComboIndex, phase, normalizedTime);
+
+        if (weaponFollower != null)
+            weaponFollower.SampleGreatSwordAttack(AttackComboIndex, phase, normalizedTime, PlayerAttackActiveState.ActiveDuration);
     }
 
     private int GetComboHitCount()

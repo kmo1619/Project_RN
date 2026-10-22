@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerAttackActiveState : IState
 {
-    private const float ActiveDuration = 0.12f;
+    public const float ActiveDuration = 0.12f;
     private readonly PlayerController player;
     private float elapsed;
 

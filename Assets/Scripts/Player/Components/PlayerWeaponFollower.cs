@@ -13,7 +13,11 @@ public class PlayerWeaponFollower : MonoBehaviour
     private PlayerWeapon playerWeapon;
     private PlayerMovement playerMovement;
     private Collider2D playerCollider;
-    private Transform visualRoot;
+    [SerializeField] private Transform visualRoot;
+    [SerializeField] private Transform greatSwordAnchor;
+    [SerializeField] private Transform greatSwordPivot;
+    [SerializeField] private AnimationClip greatSwordAttackClip;
+    [SerializeField] private AnimationClip greatSwordAttackClip2;
 
     private SpriteRenderer greatSword;
     private SpriteRenderer daggerNear;
@@ -25,8 +29,9 @@ public class PlayerWeaponFollower : MonoBehaviour
     private bool attackPoseOverride;
     private Vector2 attackPoseOffsetPixels;
     private float attackPoseAngle;
-    private readonly Dictionary<SpriteRenderer, Vector3> partFollowVelocities = new();
-    private readonly HashSet<SpriteRenderer> initializedParts = new();
+    private bool ownsVisualRoot;
+    private readonly Dictionary<Transform, Vector3> partFollowVelocities = new();
+    private readonly HashSet<Transform> initializedParts = new();
 
     public Transform ActiveWeaponTransform
     {
@@ -37,7 +42,7 @@ public class PlayerWeaponFollower : MonoBehaviour
 
             return playerWeapon.CurrentWeaponType switch
             {
-                WeaponType.GreatSword => greatSword != null ? greatSword.transform : null,
+                WeaponType.GreatSword => greatSwordPivot,
                 WeaponType.Dagger => daggerNear != null ? daggerNear.transform : null,
                 _ => straightSword != null ? straightSword.transform : null
             };
@@ -52,12 +57,44 @@ public class PlayerWeaponFollower : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         playerCollider = GetComponent<Collider2D>();
 
-        visualRoot = new GameObject("PlayerWeaponVisuals").transform;
+        if (visualRoot == null)
+        {
+            visualRoot = new GameObject("PlayerWeaponVisuals").transform;
+            ownsVisualRoot = true;
+        }
         visualRoot.position = transform.position;
         visualRoot.rotation = Quaternion.identity;
         visualRoot.localScale = Vector3.one;
 
-        greatSword = CreatePart("GreatSword", "PlayerKnight/GreatSword", -1);
+        if (greatSwordAnchor == null)
+        {
+            greatSwordAnchor = new GameObject("GreatSwordAnchor").transform;
+            greatSwordAnchor.SetParent(visualRoot, false);
+        }
+        if (greatSwordPivot == null)
+        {
+            greatSwordPivot = new GameObject("GreatSwordPivot").transform;
+            greatSwordPivot.SetParent(greatSwordAnchor, false);
+        }
+        greatSword = greatSwordPivot.GetComponentInChildren<SpriteRenderer>();
+        // The attack clip is sampled directly by the player combat states so its
+        // authored motion follows the complete startup/active/recovery timeline.
+        // Keep the Animator from also writing to the same pivot.
+        var pivotAnimator = greatSwordPivot.GetComponent<Animator>();
+        if (pivotAnimator != null)
+            pivotAnimator.enabled = false;
+        if (greatSword == null)
+        {
+            var swordSprite = Resources.Load<Sprite>("PlayerKnight/GreatSword");
+            if (swordSprite != null)
+            {
+                var swordObject = new GameObject("GreatSwordSprite");
+                swordObject.transform.SetParent(greatSwordPivot, false);
+                greatSword = swordObject.AddComponent<SpriteRenderer>();
+                greatSword.sprite = swordSprite;
+                greatSword.sortingOrder = -1;
+            }
+        }
         daggerNear = CreatePart("DaggerNear", "PlayerKnight/Dagger", -1);
         daggerFar = CreatePart("DaggerFar", "PlayerKnight/Dagger", -1);
         straightSword = CreatePart("StraightSword", "PlayerKnight/StraightSword", -1);
@@ -140,41 +177,45 @@ public class PlayerWeaponFollower : MonoBehaviour
 
         // X is measured from the player origin in 32x32 character pixels.
         // Keep the visual root unflipped so each part can ease across when facing changes.
-        SetPartPose(greatSword, -11f * facing, 3f, colliderBottomOffset);
-        SetPartPose(daggerNear, -7f * facing, 16f, colliderBottomOffset);
-        SetPartPose(daggerFar, -12f * facing, 16f, colliderBottomOffset);
-        SetPartPose(straightSword, -9f * facing, 7f, colliderBottomOffset);
-        SetPartPose(shield, 12f * facing, 13f, colliderBottomOffset);
+        SetPartPose(greatSwordAnchor, greatSword, -11f * facing, 3f, colliderBottomOffset);
+        SetPartPose(daggerNear.transform, daggerNear, -7f * facing, 16f, colliderBottomOffset);
+        SetPartPose(daggerFar.transform, daggerFar, -12f * facing, 16f, colliderBottomOffset);
+        SetPartPose(straightSword.transform, straightSword, -9f * facing, 7f, colliderBottomOffset);
+        SetPartPose(shield.transform, shield, 12f * facing, 13f, colliderBottomOffset);
     }
 
-    private void SetPartPose(SpriteRenderer part, float xPixels, float bottomClearancePixels, float colliderBottomOffset)
+    private void SetPartPose(Transform partTransform, SpriteRenderer partRenderer, float xPixels, float bottomClearancePixels, float colliderBottomOffset)
     {
-        if (part == null || part.sprite == null)
+        if (partTransform == null || partRenderer == null || partRenderer.sprite == null)
             return;
 
+        float spriteOffsetY = partRenderer.transform == partTransform
+            ? 0f
+            : partRenderer.transform.localPosition.y;
+        float spriteBottomOffset = spriteOffsetY + partRenderer.sprite.bounds.min.y;
         float y = colliderBottomOffset
             + bottomClearancePixels / referencePixelsPerUnit
-            + part.sprite.bounds.extents.y;
+            - spriteBottomOffset;
         Vector3 targetPosition = new Vector3(xPixels / referencePixelsPerUnit, y, 0f);
-        if (initializedParts.Add(part))
+        if (initializedParts.Add(partTransform))
         {
-            part.transform.localPosition = targetPosition;
+            partTransform.localPosition = targetPosition;
         }
         else
         {
-            Vector3 velocity = partFollowVelocities.TryGetValue(part, out Vector3 currentVelocity)
+            Vector3 velocity = partFollowVelocities.TryGetValue(partTransform, out Vector3 currentVelocity)
                 ? currentVelocity
                 : Vector3.zero;
-            part.transform.localPosition = Vector3.SmoothDamp(
-                part.transform.localPosition,
+            partTransform.localPosition = Vector3.SmoothDamp(
+                partTransform.localPosition,
                 targetPosition,
                 ref velocity,
                 followSmoothTime,
                 Mathf.Infinity,
                 Time.deltaTime);
-            partFollowVelocities[part] = velocity;
+            partFollowVelocities[partTransform] = velocity;
         }
-        part.transform.localRotation = Quaternion.identity;
+        partTransform.localRotation = Quaternion.identity;
     }
 
     private float GetFacingDirection()
@@ -187,7 +228,7 @@ public class PlayerWeaponFollower : MonoBehaviour
 
     private void ApplyPartFacing(float facing)
     {
-        SetPartFacing(greatSword, facing);
+        SetPartFacing(greatSwordAnchor, facing);
         SetPartFacing(daggerNear, facing);
         SetPartFacing(daggerFar, facing);
         SetPartFacing(straightSword, facing);
@@ -198,6 +239,12 @@ public class PlayerWeaponFollower : MonoBehaviour
     {
         if (part != null)
             part.transform.localScale = new Vector3(facing, 1f, 1f);
+    }
+
+    private static void SetPartFacing(Transform part, float facing)
+    {
+        if (part != null)
+            part.localScale = new Vector3(facing, 1f, 1f);
     }
 
     /// <summary>
@@ -215,7 +262,46 @@ public class PlayerWeaponFollower : MonoBehaviour
     public void ClearAttackPoseOverride()
     {
         attackPoseOverride = false;
+        if (greatSwordPivot != null)
+        {
+            greatSwordPivot.localPosition = Vector3.zero;
+            greatSwordPivot.localRotation = Quaternion.identity;
+        }
         ApplyFollowLayout();
+    }
+
+    public void SampleGreatSwordAttack(int hitIndex, string phase, float normalizedTime, float activeDuration)
+    {
+        AnimationClip attackClip = hitIndex <= 0 ? greatSwordAttackClip : greatSwordAttackClip2;
+        if (attackClip == null || greatSwordPivot == null || playerWeapon == null ||
+            playerWeapon.CurrentWeaponType != WeaponType.GreatSword)
+            return;
+
+        WeaponData weapon = playerWeapon.CurrentWeapon;
+        float startup = Mathf.Max(0.01f, weapon.attackStartup);
+        float active = Mathf.Max(0.01f, activeDuration);
+        float recovery = Mathf.Max(0.01f, weapon.attackRecovery);
+        float total = startup + active + recovery;
+        float elapsed = phase switch
+        {
+            "Startup" => Mathf.Clamp01(normalizedTime) * startup,
+            "Attack" => startup + Mathf.Clamp01(normalizedTime) * active,
+            "Recovery" => startup + active + Mathf.Clamp01(normalizedTime) * recovery,
+            _ => 0f
+        };
+
+        attackClip.SampleAnimation(
+            greatSwordPivot.gameObject,
+            Mathf.Clamp(elapsed / total, 0f, 1f) * attackClip.length);
+    }
+
+    public void ClearGreatSwordAttack()
+    {
+        if (greatSwordPivot == null)
+            return;
+
+        greatSwordPivot.localPosition = Vector3.zero;
+        greatSwordPivot.localRotation = Quaternion.identity;
     }
 
     private void ApplyAttackPose()
@@ -225,16 +311,16 @@ public class PlayerWeaponFollower : MonoBehaviour
         if (weapon == null)
             return;
 
-        weapon.localPosition += new Vector3(
+        weapon.localPosition = new Vector3(
             attackPoseOffsetPixels.x / referencePixelsPerUnit,
             attackPoseOffsetPixels.y / referencePixelsPerUnit,
             0f);
-        weapon.localRotation = Quaternion.Euler(0f, 0f, attackPoseAngle * GetFacingDirection());
+        weapon.localRotation = Quaternion.Euler(0f, 0f, attackPoseAngle);
     }
 
     private void OnDestroy()
     {
-        if (visualRoot != null)
+        if (ownsVisualRoot && visualRoot != null)
             Destroy(visualRoot.gameObject);
     }
 }

@@ -70,13 +70,20 @@ public class PlayerVisual : MonoBehaviour
 
     public void SetAttackFrame(WeaponType weapon, int hitIndex, string phase, float normalizedTime)
     {
-        // This source animation is a 3-frame knight pose sequence shared across weapon classes
-        // and combo hits; the actual weapon remains its own visual/physics object.
-        int index = phase == "Startup"
-            ? 0
-            : phase == "Recovery"
-                ? AttackFrameCount - 1
-                : Mathf.Clamp(Mathf.FloorToInt(Mathf.Clamp01(normalizedTime) * AttackFrameCount), 0, AttackFrameCount - 1);
+        // Wind up through frames 1-2-3, hold frame 3 during the active hit,
+        // then return through frames 3-2-1 during recovery.
+        int phaseFrame = Mathf.Clamp(
+            Mathf.FloorToInt(Mathf.Clamp01(normalizedTime) * AttackFrameCount),
+            0,
+            AttackFrameCount - 1);
+
+        int index = phase switch
+        {
+            "Startup" => phaseFrame,
+            "Attack" => AttackFrameCount - 1,
+            "Recovery" => AttackFrameCount - 1 - phaseFrame,
+            _ => 0
+        };
 
         if (attackFrames[index] != null)
             spriteRenderer.sprite = attackFrames[index];
