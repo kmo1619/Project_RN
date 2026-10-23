@@ -13,8 +13,8 @@ public class PlayerParryActiveState : IState
 
     public void Enter()
     {
-        timer = player.stats.parryActiveDuration;
-        player.SetPoise(player.stats.parryActivePoise);
+        timer = player.Weapon.CurrentWeapon.parryDuration;
+        player.SetPoise(player.Weapon.CurrentWeapon.parryActivePoise);
         player.Parry.SetWindowActive(true);
     }
 

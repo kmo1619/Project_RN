@@ -50,7 +50,8 @@ public class PlayerVisual : MonoBehaviour
 
     public void SetState(IState state)
     {
-        if (state is PlayerAttackStartupState || state is PlayerAttackActiveState || state is PlayerAttackRecoveryState)
+        if (state is PlayerAttackStartupState || state is PlayerAttackActiveState || state is PlayerAttackRecoveryState ||
+            state is PlayerDashAttackStartupState || state is PlayerDashAttackActiveState || state is PlayerDashAttackRecoveryState)
         {
             isMoving = false;
             isAttackingVisual = true;

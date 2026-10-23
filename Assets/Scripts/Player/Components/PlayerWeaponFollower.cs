@@ -18,6 +18,7 @@ public class PlayerWeaponFollower : MonoBehaviour
     [SerializeField] private Transform greatSwordPivot;
     [SerializeField] private AnimationClip greatSwordAttackClip;
     [SerializeField] private AnimationClip greatSwordAttackClip2;
+    [SerializeField] private AnimationClip greatSwordDashAttackClip;
 
     private SpriteRenderer greatSword;
     private SpriteRenderer daggerNear;
@@ -270,17 +271,18 @@ public class PlayerWeaponFollower : MonoBehaviour
         ApplyFollowLayout();
     }
 
-    public void SampleGreatSwordAttack(int hitIndex, string phase, float normalizedTime, float activeDuration)
+    public void SampleGreatSwordAttack(int hitIndex, string phase, float normalizedTime, float startupDuration, float activeDuration, float recoveryDuration, bool dashAttack = false)
     {
-        AnimationClip attackClip = hitIndex <= 0 ? greatSwordAttackClip : greatSwordAttackClip2;
+        AnimationClip attackClip = dashAttack
+            ? greatSwordDashAttackClip
+            : hitIndex <= 0 ? greatSwordAttackClip : greatSwordAttackClip2;
         if (attackClip == null || greatSwordPivot == null || playerWeapon == null ||
             playerWeapon.CurrentWeaponType != WeaponType.GreatSword)
             return;
 
-        WeaponData weapon = playerWeapon.CurrentWeapon;
-        float startup = Mathf.Max(0.01f, weapon.attackStartup);
+        float startup = Mathf.Max(0.01f, startupDuration);
         float active = Mathf.Max(0.01f, activeDuration);
-        float recovery = Mathf.Max(0.01f, weapon.attackRecovery);
+        float recovery = Mathf.Max(0.01f, recoveryDuration);
         float total = startup + active + recovery;
         float elapsed = phase switch
         {

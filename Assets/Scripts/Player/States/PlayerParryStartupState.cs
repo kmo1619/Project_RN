@@ -13,9 +13,9 @@ public class PlayerParryStartupState : IState
 
     public void Enter()
     {
-        timer = player.stats.parryStartupDuration;
+        timer = player.Weapon.CurrentWeapon.parryStartup;
         player.Movement.Stop();
-        player.SetPoise(player.stats.parryStartupPoise);
+        player.SetPoise(player.Weapon.CurrentWeapon.parryStartupPoise);
     }
 
     public void Update()

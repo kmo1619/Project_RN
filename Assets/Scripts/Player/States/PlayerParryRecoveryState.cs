@@ -13,9 +13,9 @@ public class PlayerParryRecoveryState : IState
 
     public void Enter()
     {
-        timer = player.stats.parryRecoveryDuration;
+        timer = player.Weapon.CurrentWeapon.parryRecovery;
         player.Parry.ResetParryResult();
-        player.SetPoise(player.stats.parryRecoveryPoise);
+        player.SetPoise(player.Weapon.CurrentWeapon.parryRecoveryPoise);
     }
 
     public void Update()

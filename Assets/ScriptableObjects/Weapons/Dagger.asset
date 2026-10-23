@@ -16,8 +16,17 @@ MonoBehaviour:
   attackDamage: 6
   attackRange: 0.8
   attackStartup: 0.05
+  attackActiveDuration: 0.12
   attackRecovery: 0.15
+  attackPoise: 0
+  dashAttackStartup: 0.025
+  dashAttackActiveDuration: 0.06
+  dashAttackRecovery: 0.075
   staggerPower: 5
   knockdownDamage: 15
   parryStartup: 0
   parryDuration: 0.15
+  parryRecovery: 0.1
+  parryStartupPoise: 50
+  parryActivePoise: 50
+  parryRecoveryPoise: 10

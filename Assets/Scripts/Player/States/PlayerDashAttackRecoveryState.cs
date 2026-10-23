@@ -5,6 +5,8 @@ public class PlayerDashAttackRecoveryState : IState
     private readonly PlayerController player;
 
     private float timer;
+    private float duration;
+    private float elapsed;
 
     public PlayerDashAttackRecoveryState(PlayerController player)
     {
@@ -15,13 +17,18 @@ public class PlayerDashAttackRecoveryState : IState
     {
         WeaponData weapon = player.Weapon.CurrentWeapon;
 
-        timer = weapon.attackRecovery;
+        duration = Mathf.Max(0.01f, weapon.dashAttackRecovery);
+        timer = duration;
+        elapsed = 0f;
         player.SetPoise(weapon.attackPoise);
+        player.SetDashAttackVisual("Recovery", 0f);
     }
 
     public void Update()
     {
+        elapsed += Time.deltaTime;
         timer -= Time.deltaTime;
+        player.SetDashAttackVisual("Recovery", elapsed / duration);
 
         if (timer <= 0f)
         {

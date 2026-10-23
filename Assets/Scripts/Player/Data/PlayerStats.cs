@@ -8,6 +8,12 @@ public class PlayerStats : ScriptableObject
 
     public float jumpForce = 10f;
 
+    [Tooltip("Higher values make the player slow down sooner while rising.")]
+    [Min(0.1f)] public float jumpRiseGravityMultiplier = 1.5f;
+
+    [Tooltip("Higher values make the player fall faster after reaching the jump peak.")]
+    [Min(0.1f)] public float jumpFallGravityMultiplier = 2.5f;
+
     [Header("Attack Movement")]
     public float attackStartupDeceleration = 30f;
 
@@ -21,23 +27,10 @@ public class PlayerStats : ScriptableObject
     [Header("Health")]
     public int maxHealth = 100;
 
-    [Header("Parry")]
-    public float parryStartupDuration  = 0.1f;
-
-    public float parryActiveDuration   = 0.2f;
-
-    public float parryRecoveryDuration = 0.3f;
-
     [Header("Poise")]
     public int idlePoise = 10;
 
     public int movePoise = 10;
-
-    public int parryStartupPoise  = 50;
-
-    public int parryActivePoise   = 50;
-
-    public int parryRecoveryPoise = 10;
 
     public int dashPoise = 5;
 

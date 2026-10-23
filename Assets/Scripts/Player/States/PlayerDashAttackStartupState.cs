@@ -5,6 +5,8 @@ public class PlayerDashAttackStartupState : IState
     private readonly PlayerController player;
 
     private float timer;
+    private float duration;
+    private float elapsed;
 
     public PlayerDashAttackStartupState(PlayerController player)
     {
@@ -15,21 +17,24 @@ public class PlayerDashAttackStartupState : IState
     {
         WeaponData weapon = player.Weapon.CurrentWeapon;
 
-        timer = weapon.attackStartup;
+        duration = Mathf.Max(0.01f, weapon.dashAttackStartup);
+        timer = duration;
+        elapsed = 0f;
         player.SetPoise(weapon.attackPoise);
         player.Movement.Stop();
+        player.SetDashAttackVisual("Startup", 0f);
     }
 
     public void Update()
     {
+        elapsed += Time.deltaTime;
         timer -= Time.deltaTime;
+        player.SetDashAttackVisual("Startup", elapsed / duration);
 
         if (timer <= 0f)
         {
-            player.Combat.PerformAttack();
-
             player.StateMachine.ChangeState(
-                player.DashAttackRecoveryState);
+                player.DashAttackActiveState);
         }
     }
 

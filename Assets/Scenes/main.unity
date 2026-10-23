@@ -1211,8 +1211,8 @@ Transform:
   m_GameObject: {fileID: 982196052}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 1, z: 1}
+  m_LocalPosition: {x: -0.0318, y: 0.3583, z: 0}
+  m_LocalScale: {x: 19.936, y: 0.2833, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1575,7 +1575,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!212 &1248231107
 SpriteRenderer:
@@ -1729,7 +1729,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.5, y: 1}
   m_EdgeRadius: 0
 --- !u!114 &1248231112
 MonoBehaviour:
@@ -1946,8 +1946,8 @@ Transform:
   m_GameObject: {fileID: 1349142223}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.35, y: 2.85, z: 0}
-  m_LocalScale: {x: 1.1685653, y: 4.578126, z: 1}
+  m_LocalPosition: {x: 9.8127, y: 2.7275, z: 0}
+  m_LocalScale: {x: 0.24317844, y: 4.8230557, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2218,8 +2218,8 @@ Transform:
   m_GameObject: {fileID: 1726544579}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.98, y: 3.01, z: 0}
-  m_LocalScale: {x: 20, y: 1, z: 1}
+  m_LocalPosition: {x: -9.98, y: 2.6517, z: 0}
+  m_LocalScale: {x: 20, y: 0.2833, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2243,6 +2243,7 @@ MonoBehaviour:
   greatSwordPivot: {fileID: 2026102406}
   greatSwordAttackClip: {fileID: 7400000, guid: d6d0b7df787ce6643a1cd1eab0c56f2b, type: 2}
   greatSwordAttackClip2: {fileID: 7400000, guid: a56e5318287ca4547acfa5718e73bd7f, type: 2}
+  greatSwordDashAttackClip: {fileID: 7400000, guid: 5d7a0517134d4e24e8fc49bea71d0147, type: 2}
 --- !u!1 &2026102401
 GameObject:
   m_ObjectHideFlags: 0

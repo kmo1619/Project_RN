@@ -59,6 +59,9 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<BoxCollider2D>();
         controller = GetComponent<PlayerController>();
+        // Faster falling from jump gravity can tunnel through thin floor colliders
+        // with discrete physics checks, so use continuous collision detection.
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         originalGravityScale = rb.gravityScale;
     }
 
@@ -149,6 +152,8 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        ApplyJumpGravity();
+
         if (isBraking)
         {
             float velocityX = Mathf.MoveTowards(
@@ -183,6 +188,18 @@ public class PlayerMovement : MonoBehaviour
 
             jumpRequested = false;
         }
+    }
+
+    private void ApplyJumpGravity()
+    {
+        float gravityMultiplier = 1f;
+
+        if (rb.linearVelocity.y > 0.01f)
+            gravityMultiplier = controller.stats.jumpRiseGravityMultiplier;
+        else if (rb.linearVelocity.y < -0.01f)
+            gravityMultiplier = controller.stats.jumpFallGravityMultiplier;
+
+        rb.gravityScale = originalGravityScale * Mathf.Max(0.1f, gravityMultiplier);
     }
 
     public void StartDash(Vector2 direction)

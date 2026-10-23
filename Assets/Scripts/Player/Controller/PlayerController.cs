@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
 
     public PlayerDashAttackStartupState DashAttackStartupState { get; private set; }
 
+    public PlayerDashAttackActiveState DashAttackActiveState { get; private set; }
+
     public PlayerDashAttackRecoveryState DashAttackRecoveryState { get; private set; }
 
     public PlayerHitStunState HitStunState { get; private set; }
@@ -87,6 +89,7 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
         DashState = new PlayerDashState(this);
 
         DashAttackStartupState  = new PlayerDashAttackStartupState(this);
+        DashAttackActiveState = new PlayerDashAttackActiveState(this);
         DashAttackRecoveryState = new PlayerDashAttackRecoveryState(this);
 
         HitStunState = new PlayerHitStunState(this);
@@ -107,7 +110,10 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
         visual.SetState(StateMachine.CurrentState);
         if (StateMachine.CurrentState is not PlayerAttackStartupState &&
             StateMachine.CurrentState is not PlayerAttackActiveState &&
-            StateMachine.CurrentState is not PlayerAttackRecoveryState)
+            StateMachine.CurrentState is not PlayerAttackRecoveryState &&
+            StateMachine.CurrentState is not PlayerDashAttackStartupState &&
+            StateMachine.CurrentState is not PlayerDashAttackActiveState &&
+            StateMachine.CurrentState is not PlayerDashAttackRecoveryState)
         {
             weaponFollower.ClearGreatSwordAttack();
         }
@@ -132,17 +138,18 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
 
     public void QueueNextComboAttack()
     {
-        if (AttackComboIndex < GetComboHitCount() - 1)
+        if (GetComboHitCount() > 0)
             queuedComboAttack = true;
     }
 
     public bool AdvanceQueuedComboAttack()
     {
-        if (!queuedComboAttack || AttackComboIndex >= GetComboHitCount() - 1)
+        if (!queuedComboAttack)
             return false;
 
         queuedComboAttack = false;
-        AttackComboIndex++;
+
+        AttackComboIndex = (AttackComboIndex + 1) % GetComboHitCount();
         return true;
     }
 
@@ -154,11 +161,29 @@ public class PlayerController : MonoBehaviour, IStateMachineProvider
 
     public void SetAttackVisual(string phase, float normalizedTime)
     {
+        WeaponData weapon = Weapon.CurrentWeapon;
+        SetAttackVisual(phase, normalizedTime, weapon.attackStartup, weapon.attackActiveDuration, weapon.attackRecovery, false);
+    }
+
+    public void SetAttackVisual(string phase, float normalizedTime, float activeDuration)
+    {
+        WeaponData weapon = Weapon.CurrentWeapon;
+        SetAttackVisual(phase, normalizedTime, weapon.attackStartup, activeDuration, weapon.attackRecovery, false);
+    }
+
+    public void SetDashAttackVisual(string phase, float normalizedTime)
+    {
+        WeaponData weapon = Weapon.CurrentWeapon;
+        SetAttackVisual(phase, normalizedTime, weapon.dashAttackStartup, weapon.dashAttackActiveDuration, weapon.dashAttackRecovery, true);
+    }
+
+    private void SetAttackVisual(string phase, float normalizedTime, float startup, float activeDuration, float recovery, bool dashAttack)
+    {
         if (visual != null)
             visual.SetAttackFrame(Weapon.CurrentWeaponType, AttackComboIndex, phase, normalizedTime);
 
         if (weaponFollower != null)
-            weaponFollower.SampleGreatSwordAttack(AttackComboIndex, phase, normalizedTime, PlayerAttackActiveState.ActiveDuration);
+            weaponFollower.SampleGreatSwordAttack(AttackComboIndex, phase, normalizedTime, startup, activeDuration, recovery, dashAttack);
     }
 
     private int GetComboHitCount()
